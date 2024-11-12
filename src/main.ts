@@ -6,7 +6,7 @@ import './assets/main.css'
 
 
 // Components
-import App from './app.vue'
+import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify'
 
