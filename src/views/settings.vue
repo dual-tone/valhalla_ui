@@ -6,14 +6,14 @@ import { VSelect } from 'vuetify/components/VSelect'
 import { VBtn } from 'vuetify/components/VBtn'
 import { VContainer } from 'vuetify/components/VGrid'
 import { VBanner } from 'vuetify/components/VBanner'
-import { onBeforeMount, ref, useTemplateRef } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import { useValhallaStore } from '@/stores/valhalla'
 import { useAppStore } from '@/stores/app'
 import type { ValhallaConfigInterface } from '@/types/store'
 
-const formTemplateRef = useTemplateRef('formTemplateRef');
+const formTemplateRef = ref();
 const valhallaStore = useValhallaStore();
 const appStore = useAppStore();
 const { valhallaConfig } = storeToRefs(valhallaStore);

@@ -5,7 +5,7 @@ import { VAlert } from 'vuetify/components/VAlert'
 import { VForm } from 'vuetify/components/VForm'
 import { VBtn } from 'vuetify/components/VBtn'
 import { VTextField } from 'vuetify/components/VTextField'
-import { inject, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue';
+import { inject, onBeforeUnmount, onMounted, ref } from 'vue';
 import type { LeafletMouseEvent } from 'leaflet';
 
 import type { MapUtil } from '@/utils/map';
@@ -13,7 +13,7 @@ import { useValhallaStore } from '@/stores/valhalla';
 
 const map = inject<MapUtil>("map");
 
-const formTemplateRef = useTemplateRef('formTemplateRef');
+const formTemplateRef = ref();
 const valhallaStore = useValhallaStore();
 const form = ref<{ source: number[] | null, destination: number[] | null }>({
     source: null,
