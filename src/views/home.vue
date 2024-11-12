@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { VListItem } from 'vuetify/components/VList'
+import { VListItem, VListSubheader, VList } from 'vuetify/components/VList'
 import { VNavigationDrawer } from 'vuetify/components/VNavigationDrawer'
 import { VMain } from 'vuetify/components/VMain'
 import { VContainer } from 'vuetify/components/VGrid'
 import { useRoute } from 'vue-router'
 
 import Map from '@/components/map.vue'
-import { DirectionFilled, HomeFilled, SettingsFilled } from '@/components/icons/filled'
+import { DirectionFilled, HomeFilled, SettingsFilled, DirectionCurveFilled } from '@/components/icons/filled'
 
 const route = useRoute();
 
@@ -14,21 +14,37 @@ const route = useRoute();
 
 <template>
   <VNavigationDrawer expand-on-hover rail location="left">
-    <VListItem to="/" title="Home">
-      <template #prepend>
-        <HomeFilled></HomeFilled>
-      </template>
-    </VListItem>
-    <VListItem to="/trace_route" title="Trace Route">
-      <template #prepend>
-        <DirectionFilled></DirectionFilled>
-      </template>
-    </VListItem>
-    <VListItem to="/settings" title="Settings">
-      <template #prepend>
-        <SettingsFilled></SettingsFilled>
-      </template>
-    </VListItem>
+    <VList>
+      <VListItem to="/" exact title="Home">
+        <template #prepend>
+          <HomeFilled></HomeFilled>
+        </template>
+      </VListItem>
+      <VListSubheader>
+        Route
+      </VListSubheader>
+      <VListItem to="/turn_by_turn" title="Turn-by-Turn">
+        <template #prepend>
+          <DirectionFilled></DirectionFilled>
+        </template>
+      </VListItem>
+      <VListSubheader>
+        Map Matching
+      </VListSubheader>
+      <VListItem to="/trace_route" title="Trace Route">
+        <template #prepend>
+          <DirectionCurveFilled></DirectionCurveFilled>
+        </template>
+      </VListItem>
+      <VListSubheader>
+        Configurations
+      </VListSubheader>
+      <VListItem to="/settings" title="Settings">
+        <template #prepend>
+          <SettingsFilled></SettingsFilled>
+        </template>
+      </VListItem>
+    </VList>
   </VNavigationDrawer>
   <VMain>
     <VContainer fluid height="100%">

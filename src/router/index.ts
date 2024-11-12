@@ -15,6 +15,10 @@ const router = createRouter({
         {
           path: 'trace_route',
           component: () => import('../views/trace_route.vue'),
+        },
+        {
+          path: 'turn_by_turn',
+          component: () => import('../views/turn_by_turn.vue'),
         }
       ]
     },

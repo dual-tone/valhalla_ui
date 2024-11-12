@@ -2,6 +2,7 @@
 import { VContainer } from 'vuetify/components/VGrid'
 import { VBanner } from 'vuetify/components/VBanner'
 import { VBtn } from 'vuetify/components/VBtn'
+import { polyline } from 'leaflet';
 
 import Editor from '@/components/editor.vue';
 import { inject, ref } from 'vue';
@@ -16,9 +17,11 @@ const valhallaStore = useValhallaStore();
 const submit = async () => {
     if (json.value === undefined || json.value == "") return;
 
-    console.log(json.value);
-    console.log(map?.map.value.getBounds());
-    await valhallaStore.traceRoute(json.value);
+    const data = await valhallaStore.traceRoute(json.value);
+
+    const { polylines, alternatePolylines } = valhallaStore.getPolylines(data.trip, data.alternates);
+
+    map?.drawPolyLines(map.map.value, polylines, alternatePolylines);
 }
 
 </script>
