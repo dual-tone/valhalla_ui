@@ -2,7 +2,6 @@
 import { VContainer } from 'vuetify/components/VGrid'
 import { VBanner } from 'vuetify/components/VBanner'
 import { VBtn } from 'vuetify/components/VBtn'
-import { polyline } from 'leaflet';
 
 import Editor from '@/components/editor.vue';
 import { inject, ref } from 'vue';
@@ -21,7 +20,12 @@ const submit = async () => {
 
     const { polylines, alternatePolylines } = valhallaStore.getPolylines(data.trip, data.alternates);
 
-    map?.drawPolyLines(map.map.value, polylines, alternatePolylines);
+    map?.addPolyLines(polylines);
+    alternatePolylines.forEach((alternate) => {
+        map?.addPolyLines(alternate, {
+            color: 'red',
+        });
+    });
 }
 
 </script>

@@ -5,11 +5,11 @@ export interface TraceRoutePayload {
 }
 
 export interface TraceRouteJson {
-    locations:       TraceRouteLocation[];
-    costing:         string;
+    locations: TraceRouteLocation[];
+    costing: string;
     costing_options: CostingOptions;
-    units:           string;
-    id:              string;
+    units: string;
+    id: string;
 }
 
 export interface CostingOptions {
@@ -105,4 +105,33 @@ export interface Location {
     lat: number;
     lon: number;
     original_index: number;
+}
+
+// Matrix API
+export interface SourceToTargetPayload {
+    sources: Source[];
+    targets: Source[];
+    costing: string;
+    shape_format: string;
+}
+
+export interface SourceToTargetResponse {
+    algorithm: string;
+    units: string;
+    sources: Source[];
+    targets: Source[];
+    sources_to_targets: Array<SourcesToTarget[]>;
+}
+
+export interface Source {
+    lon: number;
+    lat: number;
+}
+
+export interface SourcesToTarget {
+    shape: string;
+    distance: number;
+    time: number;
+    to_index: number;
+    from_index: number;
 }

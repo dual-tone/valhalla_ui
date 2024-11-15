@@ -19,6 +19,14 @@ const router = createRouter({
         {
           path: 'turn_by_turn',
           component: () => import('../views/turn_by_turn.vue'),
+        },
+        {
+          path: 'matrix',
+          component: () => import('../views/matrix.vue'),
+        },
+        {
+          path: 'isochrone',
+          component: () => import('../views/isochrone.vue'),
         }
       ]
     },

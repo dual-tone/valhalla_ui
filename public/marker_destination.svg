@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,-53.3073,0)">
+        <g id="Icon-Destination" serif:id="Icon Destination" transform="matrix(0.103222,0,0,0.103222,-276.531,-30.8705)">
+            <rect x="3195.41" y="299.068" width="310.01" height="310.01" style="fill:none;"/>
+            <g transform="matrix(10.5477,0,0,10.5477,3160.97,255.964)">
+                <path d="M17.961,4.087C23.839,4.087 28.61,8.858 28.61,14.736C28.61,20.613 23.839,33.478 17.961,33.478C12.084,33.478 7.312,20.613 7.312,14.736C7.312,8.858 12.084,4.087 17.961,4.087Z"/>
+            </g>
+            <g transform="matrix(10.6046,0,0,10.6046,3152.78,249.31)">
+                <circle cx="18.637" cy="14.714" r="7.188" style="fill:rgb(255,50,110);"/>
+            </g>
+        </g>
+    </g>
+</svg>
