@@ -101,10 +101,10 @@ export interface Summary {
 }
 
 export interface Location {
-    type: string;
+    type?: string;
     lat: number;
     lon: number;
-    original_index: number;
+    original_index?: number;
 }
 
 // Matrix API
@@ -257,4 +257,16 @@ export interface BikeNetwork {
 }
 
 export interface LiveSpeed {
+}
+
+// Isochrone API
+export interface IsochronePayload {
+    locations: Location[];
+    costing:   string;
+    contours:  Contour[];
+}
+
+export interface Contour {
+    time:  number;
+    color: string;
 }

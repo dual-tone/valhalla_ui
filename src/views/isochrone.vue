@@ -6,8 +6,10 @@ import { VDivider } from 'vuetify/components/VDivider'
 import { VDialog } from 'vuetify/components/VDialog'
 import { VCard } from 'vuetify/components/VCard'
 import { VForm } from 'vuetify/components/VForm'
+import { VList, VListItem, VListItemTitle, VListItemSubtitle } from 'vuetify/components/VList'
 import { VTextField } from 'vuetify/components/VTextField'
 import { VColorPicker } from 'vuetify/components/VColorPicker'
+import { clone } from 'lodash';
 
 import Location from '@/components/location.vue'
 import { inject, onBeforeUnmount, onMounted, ref } from 'vue';
@@ -16,15 +18,21 @@ import { useValhallaStore } from '@/stores/valhalla';
 import type { LeafletMouseEvent } from 'leaflet';
 import { AddBoxFilled } from '@/components/icons/filled'
 
+interface Contour {
+    time: number;
+    color: string;
+}
+
 const map = inject<MapUtil>("map");
 const contourFormTemplateRef = ref();
 const contourModel = ref(false);
 const valhallaStore = useValhallaStore();
 
-const form = ref<{ source: number[] | null }>({
+const form = ref<{ source: number[] | null, contours: Contour[] }>({
     source: null,
+    contours: []
 })
-const contourForm = ref<{ time: number, color: string }>({
+const contourForm = ref<Contour>({
     time: 5,
     color: '#D95151'
 })
@@ -41,14 +49,39 @@ const addContour = async () => {
 
     if (!valid) return;
 
-    console.log('Valid, errors');
-    console.log(errors);
-    console.log(contourForm.value);
+    const c = clone(contourForm.value);
+    form.value.contours.push({
+        time: c.time,
+        color: c.color.replace("#", ""),
+    });
 
     contourModel.value = false;
 }
+const fetchIsochrone = async () => {
+    if (!form.value.source || form.value.contours.length <= 0) return;
+
+    const data = await valhallaStore.getIsochrone({
+        contours: form.value.contours,
+        locations: [{
+            lat: form.value.source[0],
+            lon: form.value.source[1],
+        }],
+        costing: 'auto',
+    });
+
+    map?.clearGeoJsons();
+    map?.addGeoJson(data, null, {
+        contours: form.value.contours,
+        locations: [{
+            lat: form.value.source[0],
+            lon: form.value.source[1],
+        }],
+        costing: 'auto',
+    });
+}
 
 onMounted(() => map?.map.value!.addEventListener('click', onHandleClick));
+onMounted(() => map?.clearAllLayers());
 
 onBeforeUnmount(() => map?.map.value!.removeEventListener('click', onHandleClick));
 </script>
@@ -76,12 +109,19 @@ onBeforeUnmount(() => map?.map.value!.removeEventListener('click', onHandleClick
     <VContainer>
         <Location v-if="form.source" :lat="form.source[0]" :lng="form.source[1]" class="px-0" />
         <VDivider class="my-2"></VDivider>
-        <div class="my-2 d-flex align-center justify-space-between">
+        <div class="mt-2 d-flex align-center justify-space-between">
             <p class="text-subtitle-2 font-weight-black">Contours</p>
             <VBtn size="small" icon @click="contourModel = true">
                 <AddBoxFilled></AddBoxFilled>
             </VBtn>
         </div>
-        <VBtn color="primary">Fetch Isochrone</VBtn>
+        <VList v-if="form.contours.length">
+            <VListItem v-for="c in form.contours" class="px-0">
+                <VListItemTitle>{{ c.time }} Min</VListItemTitle>
+                <VListItemSubtitle>Color: <span :style="{ 'color': '#' + c.color }">#{{ c.color }}</span>
+                </VListItemSubtitle>
+            </VListItem>
+        </VList>
+        <VBtn @click="fetchIsochrone" color="primary" class="mt-2">Fetch Isochrone</VBtn>
     </VContainer>
 </template>

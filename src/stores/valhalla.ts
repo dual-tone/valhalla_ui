@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios';
 
 import type { ValhallaConfigInterface } from '@/types/store';
-import type { Alternate, LocatePayload, LocateResponse, RouteReponse, SourceToTargetPayload, SourceToTargetResponse, TraceRouteJson, TraceRoutePayload, TraceRouteResponse, Trip } from '@/types/valhalla';
+import type { Alternate, IsochronePayload, LocatePayload, LocateResponse, RouteReponse, SourceToTargetPayload, SourceToTargetResponse, TraceRouteJson, TraceRoutePayload, TraceRouteResponse, Trip } from '@/types/valhalla';
 
 export const useValhallaStore = defineStore('valhallaStore', () => {
 
@@ -82,6 +82,20 @@ export const useValhallaStore = defineStore('valhallaStore', () => {
         return data;
     }
 
+    const getIsochrone = async (payload: IsochronePayload) => {
+        const url = `${valhallaConfig.value!.valhallaUrl}/isochrone?json=${JSON.stringify(payload)}`;
+        const headers = {
+            'Content-Type': 'application/json'
+        } as Record<string, string>;
+
+        if (valhallaConfig.value!.isAuthRequired && valhallaConfig.value!.authMethod == 'Basic') {
+            headers['Authorization'] = 'Basic ' + btoa(valhallaConfig.value!.authBasicUsername + ':' + valhallaConfig.value!.authBasicPassword);
+        }
+
+        const { data } = await axios.get(url, { headers });
+        return data;
+    }
+
     const decodeShape = function (shape: string, precision?: number) {
         var index = 0,
             lat = 0,
@@ -148,6 +162,7 @@ export const useValhallaStore = defineStore('valhallaStore', () => {
         traceRoute,
         generateRoute,
         getMatrix,
+        getIsochrone,
         locate,
 
         decodeShape,

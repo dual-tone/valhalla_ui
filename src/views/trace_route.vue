@@ -4,7 +4,7 @@ import { VBanner } from 'vuetify/components/VBanner'
 import { VBtn } from 'vuetify/components/VBtn'
 
 import Editor from '@/components/editor.vue';
-import { inject, ref } from 'vue';
+import { inject, onMounted, ref } from 'vue';
 import type { MapUtil } from '@/utils/map';
 import { useValhallaStore } from '@/stores/valhalla';
 
@@ -28,6 +28,7 @@ const submit = async () => {
     });
 }
 
+onMounted(() => map?.clearAllLayers());
 </script>
 <template>
     <VBanner text="Trace Route"></VBanner>

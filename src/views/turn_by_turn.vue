@@ -74,6 +74,7 @@ const generateRoute = async () => {
 }
 
 onMounted(() => map?.map.value!.addEventListener('click', onHandleClick));
+onMounted(() => map?.clearAllLayers());
 
 onBeforeUnmount(() => map?.map.value!.removeEventListener('click', onHandleClick));
 

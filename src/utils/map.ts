@@ -1,23 +1,28 @@
-import { polyline, marker, map as LeafletMap, tileLayer, icon, type Map, type Marker, type PolylineOptions, Polyline } from 'leaflet';
+import { polyline, marker, map as LeafletMap, tileLayer, icon, type Map, type Marker, type PolylineOptions, Polyline, geoJSON } from 'leaflet';
 import { ref, type Ref } from 'vue';
 
 export interface MarkerDetail<T> { id: string, meta?: T };
 export interface PolylineDetail<T> { id: string, meta?: T };
+export interface GeoJsonDetail<T> { id: string, meta?: T };
 
 export interface MapUtil<
     MarkerMeta = Record<string, any>,
-    PolylineMeta = Record<string, any>
+    PolylineMeta = Record<string, any>,
+    GeoJsonMeta = Record<string, any>
 > {
     map: Ref<Map | undefined>;
     markers: Ref<MarkerDetail<MarkerMeta | Record<string, any>>[]>;
     polylines: Ref<PolylineDetail<PolylineMeta | Record<string, any>>[]>;
+    geoJsons: Ref<GeoJsonDetail<GeoJsonMeta | Record<string, any>>[]>;
     initMap: (el: string) => void;
+    addGeoJson: (geoJson: any, options?: any, meta?: Record<string, any>) => void;
     addPolyLines: (polylines: number[][][], options?: PolylineOptions, meta?: Record<string, any>) => void;
     addMarker: (latitude: number, longitude: number, options?: { icon?: 'source' | 'destination', meta?: Record<string, any> }) => Marker;
     removeMarker: (id: string) => void;
     clearMarkers: () => void;
     clearPolyLines: () => void;
     clearAllLayers: () => void;
+    clearGeoJsons: () => void;
 }
 
 export default function mapUtil() {
@@ -25,6 +30,7 @@ export default function mapUtil() {
 
     let markers = ref<MarkerDetail<Record<string, any>>[]>([]);
     let polylines = ref<PolylineDetail<Record<string, any>>[]>([])
+    let geoJsons = ref<GeoJsonDetail<Record<string, any>>[]>([])
 
     const initMap = (el: string) => {
         const m = LeafletMap(el).setView([9.9178343, 78.0815385], 11);
@@ -137,18 +143,56 @@ export default function mapUtil() {
     const clearAllLayers = () => {
         clearMarkers();
         clearPolyLines();
+        clearGeoJsons();
+    }
+
+    const addGeoJson = (geoJson: any, options?: any, meta?: Record<string, any>) => {
+        const gJ = geoJSON(geoJson, {
+            style: function (feature) {
+                return {
+                    color: feature?.properties.color,
+                    fillColor: feature?.properties.fillColor,
+                    fillOpacity: feature?.properties.fillOpacity,
+                    fill: feature?.properties.fill,
+                    fillRule: feature?.properties.fillRule,
+                };
+            }
+        }).addTo(map.value!);
+
+        geoJsons.value.push({
+            id: gJ._leaflet_id.toString(),
+            meta
+        });
+
+        map.value!.fitBounds(gJ.getBounds());
+
+    }
+
+    const clearGeoJsons = () => {
+        geoJsons.value.forEach((geoJson) => {
+            map.value!.eachLayer((layer) => {
+                if (layer._leaflet_id.toString() === geoJson.id) {
+                    map.value!.removeLayer(layer);
+                }
+            });
+        });
+
+        geoJsons.value = [];
     }
 
     return {
         map,
         markers,
         polylines,
+        geoJsons,
         initMap,
+        addGeoJson,
         addMarker,
         removeMarker,
         clearMarkers,
         addPolyLines,
         clearPolyLines,
+        clearGeoJsons,
         clearAllLayers,
     }
 }

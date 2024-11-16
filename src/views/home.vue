@@ -9,8 +9,13 @@ import { useRoute } from 'vue-router'
 import Map from '@/components/map.vue'
 import { DirectionFilled, HomeFilled, SettingsFilled, DirectionCurveFilled } from '@/components/icons/filled'
 import { HeatmapOutlined, ScatterMatrixOutlined } from '@/components/icons/outlined'
+import { inject, onMounted } from 'vue'
+import type { MapUtil } from '@/utils/map'
 
 const route = useRoute();
+const map = inject<MapUtil>('map');
+
+onMounted(() => map?.clearAllLayers());
 
 </script>
 

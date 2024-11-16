@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { VListItem, VListItemTitle, VListItemSubtitle } from 'vuetify/components/VList'
 import { VSkeletonLoader } from 'vuetify/components/VSkeletonLoader'
+import { VBtn } from 'vuetify/components/VBtn'
 
 import { useValhallaStore } from '@/stores/valhalla';
 import type { LocateResponse } from '@/types/valhalla';
+import { DeleteFilled } from '@/components/icons/filled'
 
 const props = defineProps<{
     lat: number,
     lng: number,
+    enableDelete?: boolean
 }>()
+const emit = defineEmits(['on:delete']);
 
 const valhallaStore = useValhallaStore();
 const locationDetail = ref<LocateResponse>();
@@ -43,6 +47,10 @@ watch(() => props.lat, (lat) => {
     fetchLocationDetails();
 })
 
+onMounted(() => {
+    fetchLocationDetails();
+})
+
 </script>
 <template>
     <VSkeletonLoader v-if="loading" type="list-item">
@@ -54,5 +62,10 @@ watch(() => props.lat, (lat) => {
         <VListItemSubtitle>
             {{ props.lat }}, {{ props.lng }}
         </VListItemSubtitle>
+        <template #append v-if="props.enableDelete">
+            <VBtn icon size="small" @click="$emit('on:delete')">
+                <DeleteFilled />
+            </VBtn>
+        </template>
     </VListItem>
 </template>

@@ -11,6 +11,7 @@ import type { MapUtil } from '@/utils/map';
 import { useValhallaStore } from '@/stores/valhalla';
 import { DeleteFilled } from '@/components/icons/filled'
 import type { SourcesToTarget, SourceToTargetPayload } from '@/types/valhalla'
+import Location from '@/components/location.vue'
 
 const map = inject<MapUtil<
     { selectionType: number, lat: number, lng: number },
@@ -38,7 +39,6 @@ const onHandleClick = (e: LeafletMouseEvent) => {
 }
 
 const generateRoute = async () => {
-    let colors = ['black', 'blue', 'green', 'red', 'yellow', 'orange', 'purple', 'pink', 'brown', 'gray'];
     const reqJson = {
         "sources": sources.value!.map(source => ({
             "lat": source.meta!.lat,
@@ -65,13 +65,16 @@ const generateRoute = async () => {
     polylinesData.forEach((polyline) => {
         polyline.forEach((source) => {
             map?.addPolyLines([source.polyline], {
-                color: colors.shift()!,
+                color: "#" + (Math.floor(Math.random() * 128)).toString(16).padStart(2, '0') +
+                    (Math.floor(Math.random() * 128)).toString(16).padStart(2, '0') +
+                    (Math.floor(Math.random() * 128)).toString(16).padStart(2, '0'),
             }, source.meta);
         });
     });
 }
 
 onMounted(() => map?.map.value!.addEventListener('click', onHandleClick));
+onMounted(() => map?.clearAllLayers());
 
 onBeforeUnmount(() => map?.map.value!.removeEventListener('click', onHandleClick));
 
@@ -92,30 +95,17 @@ onBeforeUnmount(() => map?.map.value!.removeEventListener('click', onHandleClick
 
         <div>
             <VList v-if="form.selectionType === 0">
-                <VListItem v-for="(source, i) in sources">
-                    <template #append>
-                        <VBtn icon @click="map?.removeMarker(source.id)">
-                            <DeleteFilled></DeleteFilled>
-                        </VBtn>
-                    </template>
-                    <VListItemTitle>
-                        {{ source.meta?.lat }}, {{ source.meta?.lng }}
-                    </VListItemTitle>
-                </VListItem>
+                <Location v-for="(source, i) in sources" :lat="source.meta?.lat" :lng="source.meta?.lng" enableDelete
+                    @on:delete="map?.removeMarker(source.id)" class="px-0 my-1">
+                </Location>
             </VList>
             <VList v-else>
-                <VListItem v-for="(destination, i) in destinations">
-                    <template #append>
-                        <VBtn icon @click="map?.removeMarker(destination.id)">
-                            <DeleteFilled></DeleteFilled>
-                        </VBtn>
-                    </template>
-                    <VListItemTitle>
-                        {{ destination.meta?.lat }}, {{ destination.meta?.lng }}
-                    </VListItemTitle>
-                </VListItem>
+                <Location v-for="(destination, i) in destinations" :lat="destination.meta?.lat"
+                    :lng="destination.meta?.lng" enableDelete @on:delete="map?.removeMarker(destination.id)"
+                    class="px-0 my-1">
+                </Location>
             </VList>
-            <VBtn color="primary" @click="generateRoute">
+            <VBtn color="primary" @click="generateRoute" class="mt-3">
                 Generate Route
             </VBtn>
         </div>

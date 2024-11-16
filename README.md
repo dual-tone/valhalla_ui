@@ -4,8 +4,9 @@ This repository is intended to build a Vue Single Page Application (SPA) to visu
 
 ## General Features
 
-- Hovering on layers provides additional details.
-- Clear layers (marker, polyline, etc...)
+- [] Hovering on layers provides additional details.
+- [x] Clear layers (marker, polyline, etc...)
+- [ ] Provisions to include all options for respective features (e.g., Costing, Units, Path features, etc...)
 
 ## APIs
 
