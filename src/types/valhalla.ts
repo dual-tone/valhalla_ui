@@ -135,3 +135,126 @@ export interface SourcesToTarget {
     to_index: number;
     from_index: number;
 }
+
+// Locate API
+export interface LocatePayload {
+    verbose: boolean;
+    locations: {
+        lat: number;
+        lon: number;
+    }[];
+    costing: string;
+    directions_options: DirectionsOptions;
+}
+
+export interface DirectionsOptions {
+    units: string;
+}
+
+export interface LocateResponse {
+    input_lon: number;
+    nodes: any[];
+    input_lat: number;
+    edges: EdgeElement[];
+}
+
+export interface EdgeElement {
+    access_restrictions: any[];
+    live_speed: LiveSpeed;
+    correlated_lon: number;
+    side_of_street: string;
+    linear_reference: string;
+    percent_along: number;
+    outbound_reach: number;
+    distance: number;
+    edge_info: EdgeInfo;
+    edge: EdgeEdge;
+    heading: number;
+    inbound_reach: number;
+    correlated_lat: number;
+    edge_id: EdgeID;
+    predicted_speeds: any[];
+}
+
+export interface EdgeEdge {
+    bridge: boolean;
+    access: { [key: string]: boolean };
+    has_sign: boolean;
+    deadend: boolean;
+    country_crossing: boolean;
+    tunnel: boolean;
+    seasonal: boolean;
+    end_restriction: { [key: string]: boolean };
+    cycle_lane: string;
+    start_restriction: { [key: string]: boolean };
+    geo_attributes: GeoAttributes;
+    part_of_complex_restriction: boolean;
+    access_restriction: boolean;
+    traffic_signal: boolean;
+    toll: boolean;
+    round_about: boolean;
+    bike_network: boolean;
+    speeds: Speeds;
+    truck_route: boolean;
+    end_node: EdgeID;
+    not_thru: boolean;
+    destination_only: boolean;
+    yield_sign: boolean;
+    classification: Classification;
+    sac_scale: string;
+    forward: boolean;
+    stop_sign: boolean;
+    lane_count: number;
+    sidewalk_right: boolean;
+    sidewalk_left: boolean;
+}
+
+export interface Classification {
+    internal: boolean;
+    link: boolean;
+    surface: string;
+    use: string;
+    classification: string;
+}
+
+export interface EdgeID {
+    value: number;
+    id: number;
+    tile_id: number;
+    level: number;
+}
+
+export interface GeoAttributes {
+    curvature: number;
+    max_down_slope: number;
+    max_up_slope: number;
+    weighted_grade: number;
+    length: number;
+}
+
+export interface Speeds {
+    predicted: boolean;
+    constrained_flow: number;
+    free_flow: number;
+    type: string;
+    default: number;
+}
+
+export interface EdgeInfo {
+    speed_limit: number;
+    mean_elevation: null;
+    shape: string;
+    names: string[];
+    bike_network: BikeNetwork;
+    way_id: number;
+}
+
+export interface BikeNetwork {
+    mountain: boolean;
+    local: boolean;
+    regional: boolean;
+    national: boolean;
+}
+
+export interface LiveSpeed {
+}

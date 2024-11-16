@@ -15,6 +15,9 @@ export interface MapUtil<
     addPolyLines: (polylines: number[][][], options?: PolylineOptions, meta?: Record<string, any>) => void;
     addMarker: (latitude: number, longitude: number, options?: { icon?: 'source' | 'destination', meta?: Record<string, any> }) => Marker;
     removeMarker: (id: string) => void;
+    clearMarkers: () => void;
+    clearPolyLines: () => void;
+    clearAllLayers: () => void;
 }
 
 export default function mapUtil() {
@@ -91,6 +94,18 @@ export default function mapUtil() {
         });
     }
 
+    const clearMarkers = () => {
+        markers.value.forEach((marker) => {
+            map.value!.eachLayer((layer) => {
+                if (layer._leaflet_id.toString() === marker.id) {
+                    map.value!.removeLayer(layer);
+                }
+            });
+        });
+
+        markers.value = [];
+    }
+
     const addPolyLines = (p: number[][][], options?: PolylineOptions, meta?: Record<string, any>) => {
         const polylineLayer = polyline(p as any, {
             color: options?.color ?? 'blue',
@@ -107,6 +122,23 @@ export default function mapUtil() {
         map.value!.fitBounds(polylineLayer.getBounds());
     }
 
+    const clearPolyLines = () => {
+        polylines.value.forEach((polyline) => {
+            map.value!.eachLayer((layer) => {
+                if (layer._leaflet_id.toString() === polyline.id) {
+                    map.value!.removeLayer(layer);
+                }
+            });
+        });
+
+        polylines.value = [];
+    }
+
+    const clearAllLayers = () => {
+        clearMarkers();
+        clearPolyLines();
+    }
+
     return {
         map,
         markers,
@@ -114,6 +146,9 @@ export default function mapUtil() {
         initMap,
         addMarker,
         removeMarker,
-        addPolyLines
+        clearMarkers,
+        addPolyLines,
+        clearPolyLines,
+        clearAllLayers,
     }
 }
