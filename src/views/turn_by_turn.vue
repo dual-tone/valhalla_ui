@@ -30,6 +30,8 @@ const onHandleClick = (e: LeafletMouseEvent) => {
         form.value.destination = null;
     }
 
+    map?.addMarker(e.latlng.lat, e.latlng.lng);
+
     console.log(form.value);
 }
 
@@ -62,13 +64,19 @@ const generateRoute = async () => {
         "id": "my_work_route"
     });
     const { polylines, alternatePolylines } = valhallaStore.getPolylines(data.trip, []);
-    map?.drawPolyLines(map.map.value, polylines, alternatePolylines as any);
+    map?.addPolyLines(polylines);
+    alternatePolylines.forEach((alternate) => {
+        map?.addPolyLines(alternate, {
+            color: 'red',
+        });
+    });
 
 }
 
-onMounted(() => map?.map.value.addEventListener('click', onHandleClick));
+onMounted(() => map?.map.value!.addEventListener('click', onHandleClick));
+onMounted(() => map?.clearAllLayers());
 
-onBeforeUnmount(() => map?.map.value.removeEventListener('click', onHandleClick));
+onBeforeUnmount(() => map?.map.value!.removeEventListener('click', onHandleClick));
 
 </script>
 <template>

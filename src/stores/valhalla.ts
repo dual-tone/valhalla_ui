@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios';
 
 import type { ValhallaConfigInterface } from '@/types/store';
-import type { Alternate, RouteReponse, TraceRouteJson, TraceRoutePayload, TraceRouteResponse, Trip } from '@/types/valhalla';
+import type { Alternate, IsochronePayload, LocatePayload, LocateResponse, RouteReponse, SourceToTargetPayload, SourceToTargetResponse, TraceRouteJson, TraceRoutePayload, TraceRouteResponse, Trip } from '@/types/valhalla';
 
 export const useValhallaStore = defineStore('valhallaStore', () => {
 
@@ -51,6 +51,48 @@ export const useValhallaStore = defineStore('valhallaStore', () => {
         }
 
         const { data } = await axios.get<RouteReponse>(url, { headers });
+        return data;
+    }
+
+    const getMatrix = async (payload: SourceToTargetPayload) => {
+        const url = `${valhallaConfig.value!.valhallaUrl}/sources_to_targets?json=${JSON.stringify(payload)}`;
+        const headers = {
+            'Content-Type': 'application/json'
+        } as Record<string, string>;
+
+        if (valhallaConfig.value!.isAuthRequired && valhallaConfig.value!.authMethod == 'Basic') {
+            headers['Authorization'] = 'Basic ' + btoa(valhallaConfig.value!.authBasicUsername + ':' + valhallaConfig.value!.authBasicPassword);
+        }
+
+        const { data } = await axios.get<SourceToTargetResponse>(url, { headers });
+        return data;
+    }
+
+    const locate = async (payload: LocatePayload) => {
+        const url = `${valhallaConfig.value!.valhallaUrl}/locate?json=${JSON.stringify(payload)}`;
+        const headers = {
+            'Content-Type': 'application/json'
+        } as Record<string, string>;
+
+        if (valhallaConfig.value!.isAuthRequired && valhallaConfig.value!.authMethod == 'Basic') {
+            headers['Authorization'] = 'Basic ' + btoa(valhallaConfig.value!.authBasicUsername + ':' + valhallaConfig.value!.authBasicPassword);
+        }
+
+        const { data } = await axios.get<LocateResponse[]>(url, { headers });
+        return data;
+    }
+
+    const getIsochrone = async (payload: IsochronePayload) => {
+        const url = `${valhallaConfig.value!.valhallaUrl}/isochrone?json=${JSON.stringify(payload)}`;
+        const headers = {
+            'Content-Type': 'application/json'
+        } as Record<string, string>;
+
+        if (valhallaConfig.value!.isAuthRequired && valhallaConfig.value!.authMethod == 'Basic') {
+            headers['Authorization'] = 'Basic ' + btoa(valhallaConfig.value!.authBasicUsername + ':' + valhallaConfig.value!.authBasicPassword);
+        }
+
+        const { data } = await axios.get(url, { headers });
         return data;
     }
 
@@ -116,8 +158,13 @@ export const useValhallaStore = defineStore('valhallaStore', () => {
         valhallaConfig,
         setValhallaConfig,
         loadValhallaConfig,
+
         traceRoute,
         generateRoute,
+        getMatrix,
+        getIsochrone,
+        locate,
+
         decodeShape,
         getPolylines,
     }
