@@ -2,9 +2,11 @@
 
 This repository is intended to build a Vue Single Page Application (SPA) to visualize the API of the Valhalla routing engine.
 
+[![App Walkthrough](https://i9.ytimg.com/vi_webp/ad8RPaYBaTE/mq3.webp?sqp=CKid4bkG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgTihRMA8=&rs=AOn4CLAm5m1x4tTEQ3OJpc6h0wOsbiwdDg)](https://youtu.be/ad8RPaYBaTE)
+
 ## General Features
 
-- [] Hovering on layers provides additional details.
+- [ ] Hovering on layers provides additional details.
 - [x] Clear layers (marker, polyline, etc...)
 - [ ] Provisions to include all options for respective features (e.g., Costing, Units, Path features, etc...)
 
